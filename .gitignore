@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.env
+.env.local
+coverage/
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.next/
+build/
+.dart_tool/
+*.log
+.DS_Store
