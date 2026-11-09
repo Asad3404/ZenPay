@@ -36,6 +36,8 @@ export interface FraudAssessment {
 
 /** Thresholds on the combined 0..1 risk score. */
 export const THRESHOLDS = { challenge: 0.5, review: 0.75, block: 0.92 };
+/** Minimum rule score before the ML model is allowed to push a payment into a hard block. */
+export const MODEL_BLOCK_MIN_RULE_SCORE = 0.3;
 
 /**
  * Two-layer fraud engine:
@@ -116,6 +118,16 @@ export class FraudService {
     }
   }
 
+  /**
+   * The model can raise risk up to a manual review on its own, but a hard block also needs
+   * explainable rule evidence, so an over-confident model can't lock customers out.
+   */
+  combine(ruleScore: number, modelScore: number | null): number {
+    if (modelScore === null) return ruleScore;
+    const cappedModel = ruleScore >= MODEL_BLOCK_MIN_RULE_SCORE ? modelScore : Math.min(modelScore, THRESHOLDS.block - 0.01);
+    return Math.max(ruleScore, cappedModel);
+  }
+
   decide(score: number): FraudDecision {
     if (score >= THRESHOLDS.block) return 'block';
     if (score >= THRESHOLDS.review) return 'review';
@@ -127,8 +139,9 @@ export class FraudService {
     const features = await this.features(input, client);
     const rule = this.rules(features);
     const model = await this.modelScore(features);
-    const score = Math.max(rule.score, model?.score ?? 0);
-    const reasons = [...rule.reasons, ...(model && model.score >= THRESHOLDS.challenge ? model.reasons : [])];
+    const score = this.combine(rule.score, model?.score ?? null);
+    // Prefer the rules' explanations; fall back to the model's when only the model raised the score.
+    const reasons = rule.reasons.length ? rule.reasons : model && model.score >= THRESHOLDS.challenge ? model.reasons : [];
     return {
       score: Math.round(score * 10_000) / 10_000,
       ruleScore: rule.score,

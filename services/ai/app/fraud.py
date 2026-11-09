@@ -38,7 +38,7 @@ FEATURES = [
 ]
 
 MODEL_PATH = Path(__file__).resolve().parent.parent / "models" / "fraud_model.joblib"
-MODEL_VERSION = "1.0.0"
+MODEL_VERSION = "1.2.0"
 
 
 def synthetic_dataset(n: int = 40_000, fraud_rate: float = 0.04, seed: int = 7) -> tuple[np.ndarray, np.ndarray]:
@@ -58,11 +58,28 @@ def synthetic_dataset(n: int = 40_000, fraud_rate: float = 0.04, seed: int = 7) 
             avg * rng.gamma(2.0, 1.0, n_legit),
             avg,
             rng.binomial(1, 0.25, n_legit),
-            rng.binomial(1, 0.93, n_legit),
+            rng.binomial(1, 0.8, n_legit),
             rng.choice([0, 1, 2], n_legit, p=[0.25, 0.6, 0.15]),
             np.clip(rng.normal(14, 4, n_legit), 0, 23).round(),
         ]
     )
+    # Busy but genuine customers (shopping trips, splitting bills): several payments within an hour.
+    busy = (rng.random(n_legit) < 0.12) & (legit[:, 5] > 0)
+    b = int(busy.sum())
+    legit[busy, 2] = rng.poisson(2.5, b)
+    legit[busy, 3] = legit[busy, 2] + rng.poisson(3, b)
+    legit[busy, 4] = legit[busy, 5] * np.maximum(legit[busy, 3], 1) * rng.uniform(0.5, 1.5, b)
+    # Genuine customers making their first payments: no spending history yet, often a new
+    # recipient and a fresh browser. Without these rows the model treats "no history" as fraud.
+    first = rng.random(n_legit) < 0.15
+    k = int(first.sum())
+    legit[first, 0] = np.clip(rng.lognormal(4.3, 1.0, k), 5, 5000)
+    legit[first, 2] = 0
+    legit[first, 3] = rng.poisson(0.3, k)
+    legit[first, 4] = legit[first, 0]
+    legit[first, 5] = 0
+    legit[first, 6] = rng.binomial(1, 0.9, k)
+    legit[first, 7] = rng.binomial(1, 0.5, k)
 
     # Fraud typologies
     kinds = rng.choice(["takeover", "mule", "velocity"], n_fraud, p=[0.5, 0.25, 0.25])
@@ -96,10 +113,12 @@ def synthetic_dataset(n: int = 40_000, fraud_rate: float = 0.04, seed: int = 7) 
 def _engineer(X: np.ndarray) -> np.ndarray:
     """Adds ratio features that make spending spikes scale-free."""
     amount, avg = X[:, 0], X[:, 5]
-    ratio = amount / np.maximum(avg, 1.0)
+    has_history = (avg > 0).astype(float)
+    # With no history there is no baseline to compare against, so the spike ratio is neutral.
+    ratio = np.where(avg > 0, amount / np.maximum(avg, 1.0), 1.0)
     log_amount = np.log1p(amount)
     night = ((X[:, 9] >= 0) & (X[:, 9] <= 5)).astype(float)
-    return np.column_stack([X, ratio, log_amount, night])
+    return np.column_stack([X, ratio, log_amount, night, has_history])
 
 
 @dataclass

@@ -81,6 +81,12 @@ describe('fraud rules', () => {
     const r = fraud.rules(base);
     expect(fraud.decide(r.score)).toBe('allow');
   });
+  it('never lets the model block on its own, but lets it hold for review', () => {
+    expect(fraud.decide(fraud.combine(0, 0.99))).toBe('review');
+    expect(fraud.decide(fraud.combine(0.15, 0.99))).toBe('review');
+    expect(fraud.decide(fraud.combine(0.35, 0.99))).toBe('block');
+    expect(fraud.combine(0.2, null)).toBe(0.2);
+  });
   it('escalates unusual patterns', () => {
     const r = fraud.rules({ ...base, amount_usd: 4000, avg_amount_90d_usd: 25, is_new_recipient: 1, is_known_device: 0, tx_count_1h: 6 });
     expect(r.score).toBeGreaterThanOrEqual(0.75);
