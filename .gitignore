@@ -12,3 +12,4 @@ build/
 .dart_tool/
 *.log
 .DS_Store
+*.tsbuildinfo
