@@ -1,0 +1,63 @@
+# Local full stack: docker compose up --build
+# Web: http://localhost:3000   API docs: http://localhost:4000/docs
+name: zenpay
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: zenpay
+      POSTGRES_PASSWORD: zenpay
+      POSTGRES_DB: zenpay
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U zenpay"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+
+  ai:
+    build: ./services/ai
+    environment:
+      # Optional: set in a .env file next to this compose file to enable the Claude assistant.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+
+  api:
+    build: ./services/api
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      ai: { condition: service_started }
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgres://zenpay:zenpay@postgres:5432/zenpay
+      REDIS_URL: redis://redis:6379
+      AI_SERVICE_URL: http://ai:8000
+      FX_RATES_URL: ${FX_RATES_URL:-}
+      CORS_ORIGINS: http://localhost:3000
+      # Local-only secrets. Generate real ones for any shared environment (openssl rand -hex 32).
+      JWT_SECRET: ${JWT_SECRET:-local-dev-access-secret-change-me}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-local-dev-refresh-secret-change-me}
+      DATA_ENCRYPTION_KEY: ${DATA_ENCRYPTION_KEY:-1111111111111111111111111111111111111111111111111111111111111111}
+    ports:
+      - "4000:4000"
+
+  web:
+    build:
+      context: ./apps/web
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:4000/api/v1
+    depends_on: [api]
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
