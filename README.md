@@ -8,7 +8,7 @@ apps/
   mobile/    Flutter app for Android and iOS
 services/
   api/       NestJS (TypeScript) core API: auth, ledger, wallets, payments, fraud, admin
-  ai/        FastAPI (Python) service: fraud model, spending insights, Claude assistant
+  ai/        FastAPI (Python) service: fraud model, spending insights, AI assistant
 docker-compose.yml
 ```
 
@@ -116,7 +116,7 @@ Captured from the running app (web app, API and AI service together) with demo d
 ```
  Web (Next.js) ─┐                       ┌─ PostgreSQL  (users, double-entry ledger, audit log)
                 ├─ HTTPS/JSON ─► API ───┼─ Redis       (MFA replay guard, QR login sessions, locks)
- Mobile (Flutter)┘   (NestJS)           └─ AI service  (fraud score, insights, assistant) ─► Claude API
+ Mobile (Flutter)┘   (NestJS)           └─ AI service  (fraud score, insights, assistant) ─► LLM API
 ```
 
 - **The API is the only public service.** The AI service is internal and only receives de-identified data (no ids, emails or account numbers).
@@ -134,7 +134,7 @@ Captured from the running app (web app, API and AI service together) with demo d
 | Payments | P2P transfers by email or phone. **EMVCo merchant QR** codes: dynamic single-use requests with a fixed amount, and a static personal "pay me" code. The CRC is validated and amount and currency are re-checked server-side against the stored request |
 | Fraud detection | Rules engine (velocity, amount spikes, new account, new recipient, unknown device, odd hours) **plus** an ML score (gradient boosting + isolation forest). Each payment is allowed, challenged with MFA, held for analyst review (funds moved to a holds account), or blocked |
 | Limits & KYC | Daily limits by verification level ($100 / $5,000 / $50,000). Pluggable KYC provider; only the last 4 characters of an ID number are stored |
-| AI guidance | Automatic categorisation, monthly trends, next-month forecast, budgets with pace tracking, personalised tips, and a chat assistant on **Claude** (falls back to built-in answers without an API key) |
+| AI guidance | Automatic categorisation, monthly trends, next-month forecast, budgets with pace tracking, personalised tips, and a chat assistant on a hosted **large language model** (falls back to built-in answers without an API key) |
 | Admin | Live stats, fraud review queue (approve and release / reject and refund), user freeze and KYC level, ledger browser, append-only audit log |
 
 ## Run it locally
@@ -153,7 +153,7 @@ docker compose exec api node dist/db/seed.js
 
 Open http://localhost:3000. API docs (Swagger) are at http://localhost:4000/docs.
 
-To enable the Claude-powered assistant, create a `.env` file next to `docker-compose.yml` containing `ANTHROPIC_API_KEY=...`.
+To enable the language-model assistant, create a `.env` file next to `docker-compose.yml` containing `ASSISTANT_API_KEY=...`.
 
 ### Option B: run each service yourself
 

@@ -26,8 +26,8 @@ services:
   ai:
     build: ./services/ai
     environment:
-      # Optional: set in a .env file next to this compose file to enable the Claude assistant.
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      # Optional: set in a .env file next to this compose file to enable the language-model assistant.
+      ASSISTANT_API_KEY: ${ASSISTANT_API_KEY:-}
 
   api:
     build: ./services/api

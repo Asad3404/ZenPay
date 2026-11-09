@@ -1,7 +1,6 @@
 """AI financial assistant.
 
-Uses Claude when an Anthropic credential is configured (ANTHROPIC_API_KEY or ANTHROPIC_AUTH_TOKEN);
-otherwise answers common questions from the computed insights so the feature still works offline.
+Uses a hosted large language model when ASSISTANT_API_KEY is set; otherwise answers common questions from the computed insights so the feature still works offline.
 
 Safety design: the assistant only receives aggregated, de-identified data (no account numbers, emails
 or ids) and has no tools that move money. It can explain and suggest; the user acts in the app.
@@ -33,8 +32,8 @@ Keep answers short and practical: a direct answer first, then at most three conc
 Give general guidance, not regulated investment, tax or legal advice; for those, suggest a qualified professional. Never ask for passwords, MFA codes, card numbers or ID numbers. If the customer mentions a payment they don't recognise or thinks someone else is using their account, tell them to freeze their account from Settings > Security and contact support right away."""
 
 
-def has_claude_credentials() -> bool:
-    return bool(os.getenv("ANTHROPIC_API_KEY") or os.getenv("ANTHROPIC_AUTH_TOKEN"))
+def has_llm_credentials() -> bool:
+    return bool(os.getenv("ASSISTANT_API_KEY"))
 
 
 _client: anthropic.Anthropic | None = None
@@ -43,7 +42,7 @@ _client: anthropic.Anthropic | None = None
 def client() -> anthropic.Anthropic:
     global _client
     if _client is None:
-        _client = anthropic.Anthropic(timeout=90.0, max_retries=2)
+        _client = anthropic.Anthropic(api_key=os.getenv("ASSISTANT_API_KEY"), timeout=90.0, max_retries=2)
     return _client
 
 
@@ -57,7 +56,7 @@ def build_snapshot(context: dict) -> dict:
     return {"customer_first_name": context.get("first_name"), **summary, "recent_transactions": recent}
 
 
-def chat_with_claude(message: str, history: list[dict], context: dict) -> dict:
+def chat_with_llm(message: str, history: list[dict], context: dict) -> dict:
     snapshot = build_snapshot(context)
     messages = [{"role": h["role"], "content": h["content"]} for h in history if h.get("content")]
     # Conversation must start with a user turn.
@@ -76,24 +75,24 @@ def chat_with_claude(message: str, history: list[dict], context: dict) -> dict:
             system=SYSTEM_PROMPT,
             messages=messages,
             output_config={"effort": "low"},
-            # Server-side fallback: if a safety classifier declines, the API retries on Anthropic's recommended model.
+            # Server-side fallback: if the model declines, the API retries on the provider's recommended model.
             betas=["server-side-fallback-2026-07-01"],
             fallbacks="default",
         )
     except anthropic.RateLimitError:
-        log.warning("Claude rate limited; using offline answer")
+        log.warning("Language model rate limited; using offline answer")
         return {**offline_answer(message, context), "notice": "The AI assistant is busy, so this is a quick built-in answer."}
     except anthropic.APIStatusError as exc:
-        log.error("Claude API error %s (request %s)", exc.status_code, getattr(exc, "request_id", None))
+        log.error("Language model API error %s (request %s)", exc.status_code, getattr(exc, "request_id", None))
         return {**offline_answer(message, context), "notice": "The AI assistant is unavailable, so this is a quick built-in answer."}
     except anthropic.APIConnectionError:
-        log.error("Could not reach the Claude API")
+        log.error("Could not reach the language model API")
         return {**offline_answer(message, context), "notice": "The AI assistant is unavailable, so this is a quick built-in answer."}
 
     if response.stop_reason == "refusal":
-        return {"reply": "I can't help with that one. I can help with budgeting, spending and using ZenPay.", "source": "claude", "model": response.model}
+        return {"reply": "I can't help with that one. I can help with budgeting, spending and using ZenPay.", "source": "llm", "model": response.model}
     text = "".join(block.text for block in response.content if block.type == "text").strip()
-    return {"reply": text or "Sorry, I couldn't come up with an answer. Try rephrasing.", "source": "claude", "model": response.model}
+    return {"reply": text or "Sorry, I couldn't come up with an answer. Try rephrasing.", "source": "llm", "model": response.model}
 
 
 def offline_answer(message: str, context: dict) -> dict:
@@ -136,6 +135,6 @@ def offline_answer(message: str, context: dict) -> dict:
 
 
 def chat(message: str, history: list[dict], context: dict) -> dict:
-    if has_claude_credentials():
-        return chat_with_claude(message, history, context)
+    if has_llm_credentials():
+        return chat_with_llm(message, history, context)
     return offline_answer(message, context)

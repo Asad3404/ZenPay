@@ -27,8 +27,7 @@ def client(monkeypatch_module):
 @pytest.fixture(scope="module")
 def monkeypatch_module():
     mp = pytest.MonkeyPatch()
-    mp.delenv("ANTHROPIC_API_KEY", raising=False)
-    mp.delenv("ANTHROPIC_AUTH_TOKEN", raising=False)
+    mp.delenv("ASSISTANT_API_KEY", raising=False)
     yield mp
     mp.undo()
 
@@ -118,10 +117,10 @@ class _FakeResponse:
     def __init__(self, stop_reason="end_turn", text="You spent most on groceries."):
         self.stop_reason = stop_reason
         self.content = [_FakeBlock(text)]
-        self.model = "claude-opus-5-5"
+        self.model = assistant.MODEL
 
 
-def test_assistant_uses_claude_when_configured(monkeypatch):
+def test_assistant_uses_llm_when_configured(monkeypatch):
     calls = {}
 
     class FakeMessages:
@@ -133,11 +132,11 @@ def test_assistant_uses_claude_when_configured(monkeypatch):
         class beta:
             messages = FakeMessages()
 
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.setenv("ASSISTANT_API_KEY", "test")
     monkeypatch.setattr(assistant, "client", lambda: FakeClient())
     out = assistant.chat("Where does my money go?", [{"role": "assistant", "content": "Hi!"}], _ctx(datetime.now(timezone.utc)))
-    assert out == {"reply": "You spent most on groceries.", "source": "claude", "model": "claude-opus-5-5"}
-    assert calls["model"] == "claude-opus-5-5"
+    assert out == {"reply": "You spent most on groceries.", "source": "llm", "model": assistant.MODEL}
+    assert calls["model"] == assistant.MODEL
     assert calls["messages"][0]["role"] == "user"  # leading assistant turn dropped
     assert "<account_snapshot>" in calls["messages"][-1]["content"]
     assert calls["fallbacks"] == "default"
@@ -152,7 +151,7 @@ def test_assistant_handles_refusal(monkeypatch):
         class beta:
             messages = FakeMessages()
 
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "test")
+    monkeypatch.setenv("ASSISTANT_API_KEY", "test")
     monkeypatch.setattr(assistant, "client", lambda: FakeClient())
     out = assistant.chat("hello", [], _ctx(datetime.now(timezone.utc)))
     assert "can't help" in out["reply"]

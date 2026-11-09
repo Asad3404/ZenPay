@@ -90,7 +90,7 @@ def health():
     return {
         "status": "ok",
         "fraudModel": {"version": model.version, "metrics": model.metrics} if model else None,
-        "assistant": "claude" if assistant.has_claude_credentials() else "built-in",
+        "assistant": "llm" if assistant.has_llm_credentials() else "built-in",
     }
 
 
@@ -121,7 +121,7 @@ def categorize_one(req: CategorizeRequest):
 
 @app.post("/v1/assistant/chat")
 async def chat(req: ChatRequest):
-    # The Anthropic client is synchronous; run it off the event loop.
+    # The model client is synchronous; run it off the event loop.
     return await run_in_threadpool(
         assistant.chat, req.message, [t.model_dump() for t in req.history], req.context.model_dump()
     )
