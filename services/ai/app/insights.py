@@ -24,10 +24,11 @@ CATEGORIES = [*CATEGORY_KEYWORDS.keys(), "Transfers", "Other"]
 
 
 def categorize(description: str, kind: str = "", counterparty: str = "") -> str:
-    text = f"{description} {counterparty}".lower()
-    for category, words in CATEGORY_KEYWORDS.items():
-        if any(re.search(rf"\b{re.escape(w)}", text) for w in words):
-            return category
+    # The payment description is the strongest signal; fall back to the counterparty's name.
+    for text in (description.lower(), counterparty.lower()):
+        for category, words in CATEGORY_KEYWORDS.items():
+            if any(re.search(rf"\b{re.escape(w)}", text) for w in words):
+                return category
     if kind == "transfer":
         return "Transfers"
     return "Other"

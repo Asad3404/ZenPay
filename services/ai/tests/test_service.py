@@ -58,6 +58,8 @@ def test_categorize():
     assert categorize("Rent share", "transfer") == "Bills & Utilities"
     assert categorize("for you", "transfer") == "Transfers"
     assert categorize("zzz") == "Other"
+    assert categorize("Groceries", "qr_payment", "Zen Cafe") == "Groceries"
+    assert categorize("ORDER-42", "qr_payment", "Zen Cafe") == "Food & Dining"
 
 
 def test_forecast_follows_trend():

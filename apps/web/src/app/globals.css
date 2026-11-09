@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens as RGB triplets so Tailwind can apply alpha. */
+:root {
+  color-scheme: light;
+  --bg: 246 247 249;
+  --surface: 255 255 255;
+  --muted: 240 242 245;
+  --line: 226 229 234;
+  --ink: 17 20 26;
+  --sub: 82 88 100;
+  --faint: 130 137 150;
+  --brand: 15 118 110;
+  --brand-ink: 255 255 255;
+  --good: 21 128 61;
+  --warn: 180 83 9;
+  --bad: 190 18 60;
+  /* Chart series (validated categorical slots 1-2) */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --chart-grid: #e5e7eb;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: 12 14 18;
+    --surface: 22 25 31;
+    --muted: 31 35 43;
+    --line: 45 50 60;
+    --ink: 236 238 242;
+    --sub: 170 176 188;
+    --faint: 120 127 140;
+    --brand: 45 212 191;
+    --brand-ink: 6 30 28;
+    --good: 74 222 128;
+    --warn: 251 191 36;
+    --bad: 251 113 133;
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --chart-grid: #2d323c;
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: 12 14 18;
+  --surface: 22 25 31;
+  --muted: 31 35 43;
+  --line: 45 50 60;
+  --ink: 236 238 242;
+  --sub: 170 176 188;
+  --faint: 120 127 140;
+  --brand: 45 212 191;
+  --brand-ink: 6 30 28;
+  --good: 74 222 128;
+  --warn: 251 191 36;
+  --bad: 251 113 133;
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --chart-grid: #2d323c;
+}
+
+html,
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--ink));
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-line bg-surface p-5;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-brand-ink hover:opacity-90;
+  }
+  .btn-ghost {
+    @apply btn border border-line bg-surface text-ink hover:bg-muted;
+  }
+  .btn-danger {
+    @apply btn bg-bad text-white hover:opacity-90;
+  }
+  .input {
+    @apply w-full rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-faint focus:border-brand focus:ring-2 focus:ring-brand/20;
+  }
+  .label {
+    @apply mb-1.5 block text-sm font-medium text-sub;
+  }
+  .h1 {
+    @apply text-2xl font-semibold tracking-tight;
+  }
+  .badge {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
