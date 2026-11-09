@@ -87,7 +87,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
           ),
       ],
       const SizedBox(height: 16),
-      Text('Ask Zen', style: Theme.of(context).textTheme.titleMedium),
+      Text('Ask the assistant', style: Theme.of(context).textTheme.titleMedium),
       const SizedBox(height: 8),
       if (_history.isEmpty)
         Wrap(spacing: 8, runSpacing: 8, children: [

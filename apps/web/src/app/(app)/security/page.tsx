@@ -123,7 +123,7 @@ function KycCard({ level, onChange }: { level: number; onChange: () => void }) {
             <input id="idnum" className="input" required minLength={5} value={form.idNumber} onChange={set('idNumber')} />
           </div>
           {error && <div className="sm:col-span-2"><Alert>{error}</Alert></div>}
-          <p className="text-xs text-faint sm:col-span-2">Sandbox: verification is simulated. In production this hands off to a KYC provider; ZenPay stores only the last 4 characters of your document number.</p>
+          <p className="text-xs text-faint sm:col-span-2">Sandbox: verification is simulated. In production this hands off to a KYC provider; SecurePay stores only the last 4 characters of your document number.</p>
           <button className="btn-primary sm:col-span-2" disabled={busy}>{busy && <Spinner />} Verify identity</button>
         </form>
       )}
@@ -136,8 +136,8 @@ function ApproveQrLogin() {
   const [msg, setMsg] = useState<{ kind: 'success' | 'error'; text: string } | null>(null);
   const onResult = useCallback(async (text: string) => {
     setScanning(false);
-    const sid = /zenpay:\/\/login\?sid=([\w-]+)/.exec(text)?.[1];
-    if (!sid) return setMsg({ kind: 'error', text: 'That isn’t a ZenPay sign-in code.' });
+    const sid = /securepay:\/\/login\?sid=([\w-]+)/.exec(text)?.[1];
+    if (!sid) return setMsg({ kind: 'error', text: 'That isn’t a SecurePay sign-in code.' });
     try {
       await api('/auth/qr/approve', { body: { sessionId: sid } });
       setMsg({ kind: 'success', text: 'Approved. The other device is now signed in.' });
@@ -148,7 +148,7 @@ function ApproveQrLogin() {
   return (
     <section className="card space-y-3">
       <h2 className="font-semibold">Scan to sign in</h2>
-      <p className="text-sm text-sub">Sign in on a computer without typing your password: open the ZenPay login page there, choose “Scan QR code”, then scan it here. Only approve codes you opened yourself.</p>
+      <p className="text-sm text-sub">Sign in on a computer without typing your password: open the SecurePay login page there, choose “Scan QR code”, then scan it here. Only approve codes you opened yourself.</p>
       {scanning ? <QrScanner onResult={onResult} /> : <button className="btn-ghost" onClick={() => { setMsg(null); setScanning(true); }}>▦ Open scanner</button>}
       {msg && <Alert kind={msg.kind}>{msg.text}</Alert>}
     </section>

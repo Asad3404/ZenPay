@@ -57,7 +57,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         const SizedBox(height: 12),
         Text(
           _request == null
-              ? 'Anyone with ZenPay can scan this to pay you.'
+              ? 'Anyone with SecurePay can scan this to pay you.'
               : 'Scan to pay ${money(_request!['amount'], _request!['currency'])} · valid for 15 minutes',
           textAlign: TextAlign.center,
         ),

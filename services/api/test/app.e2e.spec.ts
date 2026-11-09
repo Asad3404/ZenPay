@@ -1,8 +1,8 @@
 /**
  * End-to-end tests against a real PostgreSQL and Redis.
- * Uses TEST_DATABASE_URL (default postgres://postgres@localhost:5432/zenpay_test), which is wiped first.
+ * Uses TEST_DATABASE_URL (default postgres://postgres@localhost:5432/securepay_test), which is wiped first.
  */
-process.env.DATABASE_URL = process.env.TEST_DATABASE_URL ?? 'postgres://postgres@localhost:5432/zenpay_test';
+process.env.DATABASE_URL = process.env.TEST_DATABASE_URL ?? 'postgres://postgres@localhost:5432/securepay_test';
 process.env.AI_SERVICE_URL = '';
 process.env.FX_RATES_URL = '';
 process.env.DISABLE_RATE_LIMIT = 'true';

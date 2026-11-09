@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'ZenPay',
+  title: 'SecurePay',
   description: 'AI-powered digital wallet: multi-currency, QR payments, MFA and fraud protection.',
 };
 

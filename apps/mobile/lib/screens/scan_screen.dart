@@ -4,7 +4,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import '../api.dart';
 import '../widgets/common.dart';
 
-/// Scans either a ZenPay payment QR (EMV) or a web sign-in QR (zenpay://login?sid=...).
+/// Scans either a SecurePay payment QR (EMV) or a web sign-in QR (securepay://login?sid=...).
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
 
@@ -22,7 +22,7 @@ class _ScanScreenState extends State<ScanScreen> {
     _handling = true;
     await _controller.stop();
     try {
-      final login = RegExp(r'zenpay://login\?sid=([\w-]+)').firstMatch(text);
+      final login = RegExp(r'securepay://login\?sid=([\w-]+)').firstMatch(text);
       if (login != null) {
         await _approveLogin(login.group(1)!);
       } else {
@@ -40,7 +40,7 @@ class _ScanScreenState extends State<ScanScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Sign in on another device?'),
-        content: const Text('Only approve if you just opened the ZenPay login page yourself.'),
+        content: const Text('Only approve if you just opened the SecurePay login page yourself.'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
           FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Approve')),
@@ -115,7 +115,7 @@ class _ScanScreenState extends State<ScanScreen> {
           left: 0,
           right: 0,
           bottom: 40,
-          child: Text('Point at a ZenPay payment or sign-in code', textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
+          child: Text('Point at a SecurePay payment or sign-in code', textAlign: TextAlign.center, style: TextStyle(color: Colors.white)),
         ),
       ]),
     );

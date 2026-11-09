@@ -60,8 +60,8 @@ export function AppShell({ children, admin = false }: { children: ReactNode; adm
       <aside className="border-b border-line bg-surface md:sticky md:top-0 md:flex md:h-screen md:w-60 md:flex-col md:border-b-0 md:border-r">
         <div className="flex items-center justify-between px-5 py-4">
           <Link href={admin ? '/admin' : '/dashboard'} className="flex items-center gap-2 text-lg font-bold tracking-tight">
-            <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-brand-ink">Z</span>
-            ZenPay{admin && <span className="badge bg-muted text-sub">Admin</span>}
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-brand text-brand-ink">S</span>
+            SecurePay{admin && <span className="badge bg-muted text-sub">Admin</span>}
           </Link>
         </div>
         <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-1 md:flex-col md:overflow-visible" aria-label="Main">

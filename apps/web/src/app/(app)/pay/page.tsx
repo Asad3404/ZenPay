@@ -156,9 +156,9 @@ function Receive() {
     <div className="grid gap-6 lg:grid-cols-2">
       <section className="card space-y-3 text-center">
         <h2 className="text-left font-semibold">My QR code</h2>
-        <p className="text-left text-sm text-sub">Anyone with ZenPay can scan this to pay you any amount.</p>
+        <p className="text-left text-sm text-sub">Anyone with SecurePay can scan this to pay you any amount.</p>
         <div className="mx-auto w-56 rounded-2xl border border-line bg-white p-3">
-          {mine ? <img src={mine.qrCodeDataUrl} alt="Your personal ZenPay QR code" /> : <Spinner className="text-sub" />}
+          {mine ? <img src={mine.qrCodeDataUrl} alt="Your personal SecurePay QR code" /> : <Spinner className="text-sub" />}
         </div>
       </section>
       <section className="card space-y-4">

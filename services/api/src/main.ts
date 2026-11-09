@@ -12,7 +12,7 @@ async function main() {
   configureApp(app);
   app.enableShutdownHooks();
   await app.listen(config.port, '0.0.0.0');
-  Logger.log(`ZenPay API listening on :${config.port} (docs at /docs)`, 'Bootstrap');
+  Logger.log(`SecurePay API listening on :${config.port} (docs at /docs)`, 'Bootstrap');
 }
 
 main().catch((err) => {

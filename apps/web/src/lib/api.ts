@@ -50,10 +50,10 @@ const storage = {
 
 export function deviceId(): string {
   try {
-    let id = window.localStorage.getItem('zp_device');
+    let id = window.localStorage.getItem('sp_device');
     if (!id) {
       id = crypto.randomUUID();
-      window.localStorage.setItem('zp_device', id);
+      window.localStorage.setItem('sp_device', id);
     }
     return id;
   } catch {
@@ -62,20 +62,20 @@ export function deviceId(): string {
 }
 
 export function getUser(): SessionUser | null {
-  const raw = storage.get('zp_user');
+  const raw = storage.get('sp_user');
   return raw ? (JSON.parse(raw) as SessionUser) : null;
 }
 
 export function setSession(t: TokenResponse | null) {
   accessToken = t?.accessToken ?? null;
-  storage.set('zp_refresh', t?.refreshToken ?? null);
-  storage.set('zp_user', t ? JSON.stringify(t.user) : null);
+  storage.set('sp_refresh', t?.refreshToken ?? null);
+  storage.set('sp_user', t ? JSON.stringify(t.user) : null);
   listeners.forEach((l) => l());
 }
 
 export function updateUser(patch: Partial<SessionUser>) {
   const u = getUser();
-  if (u) storage.set('zp_user', JSON.stringify({ ...u, ...patch }));
+  if (u) storage.set('sp_user', JSON.stringify({ ...u, ...patch }));
   listeners.forEach((l) => l());
 }
 
@@ -87,7 +87,7 @@ export function onSessionChange(fn: () => void) {
 let refreshing: Promise<boolean> | null = null;
 
 async function refresh(): Promise<boolean> {
-  const rt = storage.get('zp_refresh');
+  const rt = storage.get('sp_refresh');
   if (!rt) return false;
   refreshing ??= (async () => {
     try {
@@ -128,7 +128,7 @@ export async function api<T = any>(path: string, init: { method?: string; body?:
   try {
     res = await send();
   } catch {
-    throw new ApiError(0, 'NETWORK', 'Cannot reach ZenPay. Check your connection.', null);
+    throw new ApiError(0, 'NETWORK', 'Cannot reach SecurePay. Check your connection.', null);
   }
   if (res.status === 401 && init.auth !== false && (await refresh())) res = await send();
   const text = await res.text();
@@ -142,7 +142,7 @@ export async function api<T = any>(path: string, init: { method?: string; body?:
 }
 
 export async function logout() {
-  const rt = storage.get('zp_refresh');
+  const rt = storage.get('sp_refresh');
   if (rt) await api('/auth/logout', { body: { refreshToken: rt }, auth: false }).catch(() => undefined);
   setSession(null);
 }

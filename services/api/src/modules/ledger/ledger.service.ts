@@ -35,7 +35,7 @@ export interface JournalEntry {
 }
 
 /**
- * Double-entry ledger. All money movement in ZenPay goes through post().
+ * Double-entry ledger. All money movement in SecurePay goes through post().
  * Invariants enforced here and in the database:
  *  - postings of an entry sum to zero per currency
  *  - wallet balances never go negative (CHECK constraint)

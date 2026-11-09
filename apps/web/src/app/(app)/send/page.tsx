@@ -87,7 +87,7 @@ export default function SendPage() {
   return (
     <>
       {modal}
-      <PageHeader title="Send money" subtitle="Instant transfers to any ZenPay user, free." />
+      <PageHeader title="Send money" subtitle="Instant transfers to any SecurePay user, free." />
       <div className="max-w-lg space-y-5">
         <form onSubmit={find} className="card space-y-3">
           <label className="label" htmlFor="q">Recipient’s email or phone</label>

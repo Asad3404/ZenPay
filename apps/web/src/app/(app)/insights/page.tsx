@@ -67,8 +67,8 @@ function Assistant() {
 
   return (
     <section className="card flex h-[32rem] flex-col">
-      <h2 className="font-semibold">Ask Zen, your money assistant</h2>
-      <p className="text-xs text-faint">Answers use your ZenPay activity. Zen can’t move money and never asks for codes or passwords.</p>
+      <h2 className="font-semibold">Ask the money assistant</h2>
+      <p className="text-xs text-faint">Answers use your SecurePay activity. The assistant can’t move money and never asks for codes or passwords.</p>
       <div className="mt-3 flex-1 space-y-3 overflow-y-auto pr-1" aria-live="polite">
         {history.length === 0 && (
           <div className="flex flex-wrap gap-2">

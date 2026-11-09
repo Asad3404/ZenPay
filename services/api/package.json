@@ -1,8 +1,8 @@
 {
-  "name": "@zenpay/api",
+  "name": "@securepay/api",
   "version": "1.0.0",
   "private": true,
-  "description": "ZenPay core API: auth, MFA, wallets, ledger, transfers, FX, QR payments, fraud and admin",
+  "description": "SecurePay core API: auth, MFA, wallets, ledger, transfers, FX, QR payments, fraud and admin",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && cp -r src/db/migrations dist/db/",
     "start": "node dist/main.js",

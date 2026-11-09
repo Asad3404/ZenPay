@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zenpay_mobile/widgets/common.dart';
+import 'package:securepay_mobile/widgets/common.dart';
 
 void main() {
   test('formats money with currency symbols', () {

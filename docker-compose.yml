@@ -1,18 +1,18 @@
 # Local full stack: docker compose up --build
 # Web: http://localhost:3000   API docs: http://localhost:4000/docs
-name: zenpay
+name: securepay
 
 services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: zenpay
-      POSTGRES_PASSWORD: zenpay
-      POSTGRES_DB: zenpay
+      POSTGRES_USER: securepay
+      POSTGRES_PASSWORD: securepay
+      POSTGRES_DB: securepay
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U zenpay"]
+      test: ["CMD-SHELL", "pg_isready -U securepay"]
       interval: 5s
       retries: 10
 
@@ -38,7 +38,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 4000
-      DATABASE_URL: postgres://zenpay:zenpay@postgres:5432/zenpay
+      DATABASE_URL: postgres://securepay:securepay@postgres:5432/securepay
       REDIS_URL: redis://redis:6379
       AI_SERVICE_URL: http://ai:8000
       FX_RATES_URL: ${FX_RATES_URL:-}

@@ -26,7 +26,7 @@ describe('TOTP (RFC 6238)', () => {
     expect(['755224', '287082', '359152'].map((_, i) => hotp(secret, i))).toEqual(['755224', '287082', '359152']);
   });
   it('round-trips base32 and verifies within drift window', () => {
-    const buf = Buffer.from('hello zenpay secret');
+    const buf = Buffer.from('hello securepay secret');
     expect(base32Decode(base32Encode(buf)).equals(buf)).toBe(true);
     const secret = base32Encode(Buffer.from('12345678901234567890'));
     const now = 59_000;
@@ -44,7 +44,7 @@ describe('EMV QR codec', () => {
     const payload = encodeQr({
       requestId: '7f0f5c3e-2a7e-4a4a-9b52-0a2a3f8f1c11',
       merchantId: '0b8a1e6e-9f0f-4f7b-8b3a-6e5f1d2c3b4a',
-      merchantName: 'Zen Cafe',
+      merchantName: 'Corner Cafe',
       city: 'Lahore',
       country: 'PK',
       currencyNumeric: '840',
@@ -54,7 +54,7 @@ describe('EMV QR codec', () => {
     const qr = decodeQr(payload);
     expect(qr.amount).toBe('12.50');
     expect(qr.reference).toBe('ORDER-42');
-    expect(qr.merchantName).toBe('Zen Cafe');
+    expect(qr.merchantName).toBe('Corner Cafe');
   });
   it('rejects tampered payloads', () => {
     const payload = encodeQr({ requestId: 'static', merchantId: 'abc', merchantName: 'X', city: 'Y', country: 'US', currencyNumeric: '840' });

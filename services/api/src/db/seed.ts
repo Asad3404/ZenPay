@@ -6,8 +6,8 @@ import { migrate } from './migrate';
 
 /**
  * Creates demo users with balances and some history so the apps have data to show.
- * Admin:  admin@zenpay.dev / Admin12345
- * Users:  alice@zenpay.dev, bob@zenpay.dev / Password123
+ * Admin:  admin@securepay.dev / Admin12345
+ * Users:  alice@securepay.dev, bob@securepay.dev / Password123
  */
 async function seed() {
   await migrate();
@@ -15,7 +15,7 @@ async function seed() {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
-    const existing = await client.query(`SELECT 1 FROM users WHERE email = 'admin@zenpay.dev'`);
+    const existing = await client.query(`SELECT 1 FROM users WHERE email = 'admin@securepay.dev'`);
     if (existing.rowCount) {
       console.log('seed data already present');
       await client.query('ROLLBACK');
@@ -31,10 +31,10 @@ async function seed() {
           [email, name, hash, role, kyc, cur],
         )
       ).rows[0].id as string;
-    await ins('admin@zenpay.dev', 'ZenPay Admin', adminPw, 'admin', 2);
-    const alice = await ins('alice@zenpay.dev', 'Alice Khan', pw);
-    const bob = await ins('bob@zenpay.dev', 'Bob Ahmed', pw);
-    const cafe = await ins('cafe@zenpay.dev', 'Zen Cafe', pw, 'user', 2);
+    await ins('admin@securepay.dev', 'SecurePay Admin', adminPw, 'admin', 2);
+    const alice = await ins('alice@securepay.dev', 'Alice Khan', pw);
+    const bob = await ins('bob@securepay.dev', 'Bob Ahmed', pw);
+    const cafe = await ins('cafe@securepay.dev', 'Corner Cafe', pw, 'user', 2);
 
     const account = async (userId: string | null, cur: string, code?: string) => {
       const type = userId ? 'wallet' : 'system';
@@ -65,20 +65,20 @@ async function seed() {
     await post('deposit', bob, 'Top-up via sandbox', 90, fundingUsd, bobUsd, 1_500_00, 'USD', { counterpartyName: 'Card top-up', amountUsdMinor: 1_500_00 });
 
     const spend: [string, number, number][] = [
-      ['Coffee and croissant', 6_50, 2], ['Lunch at Zen Cafe', 18_20, 5], ['Groceries', 74_10, 8], ['Uber ride home', 14_75, 9],
+      ['Coffee and croissant', 6_50, 2], ['Lunch at Corner Cafe', 18_20, 5], ['Groceries', 74_10, 8], ['Uber ride home', 14_75, 9],
       ['Electricity bill', 62_00, 12], ['Netflix subscription', 15_49, 15], ['Dinner with friends', 48_00, 20], ['Pharmacy', 22_35, 24],
       ['Groceries', 81_40, 30], ['Bus pass', 40_00, 33], ['Movie tickets', 24_00, 38], ['Internet bill', 45_00, 42],
       ['Coffee', 4_80, 47], ['Groceries', 69_90, 55], ['Books for course', 36_00, 60], ['Restaurant', 52_30, 66],
     ];
     for (const [note, amount, days] of spend) {
       await post('qr_payment', alice, note, days, aliceUsd, cafeUsd, amount, 'USD', {
-        recipientId: cafe, recipientName: 'Zen Cafe', senderId: alice, senderName: 'Alice Khan', note, amountUsdMinor: amount,
+        recipientId: cafe, recipientName: 'Corner Cafe', senderId: alice, senderName: 'Alice Khan', note, amountUsdMinor: amount,
       });
     }
     await post('transfer', alice, 'Rent share', 28, aliceUsd, bobUsd, 400_00, 'USD', { recipientId: bob, recipientName: 'Bob Ahmed', senderId: alice, senderName: 'Alice Khan', note: 'Rent share', amountUsdMinor: 400_00 });
     await post('transfer', bob, 'Concert tickets', 10, bobUsd, aliceUsd, 60_00, 'USD', { recipientId: alice, recipientName: 'Alice Khan', senderId: bob, senderName: 'Bob Ahmed', note: 'Concert tickets', amountUsdMinor: 60_00 });
     await client.query('COMMIT');
-    console.log('seeded: admin@zenpay.dev / Admin12345, alice@zenpay.dev / Password123, bob@zenpay.dev / Password123');
+    console.log('seeded: admin@securepay.dev / Admin12345, alice@securepay.dev / Password123, bob@securepay.dev / Password123');
   } catch (err) {
     await client.query('ROLLBACK');
     throw err;

@@ -33,8 +33,8 @@ export default function RegisterPage() {
     <div className="grid min-h-screen place-items-center px-4 py-10">
       <div className="w-full max-w-md">
         <div className="mb-6 flex items-center justify-center gap-2 text-xl font-bold">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-brand-ink">Z</span>
-          ZenPay
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-brand-ink">S</span>
+          SecurePay
         </div>
         <form onSubmit={submit} className="card space-y-4 p-6 sm:p-8">
           <div>

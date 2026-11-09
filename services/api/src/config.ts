@@ -18,7 +18,7 @@ function secret(name: string, devFallback: string): string {
 export const config = {
   port: Number(process.env.PORT ?? 4000),
   isProd,
-  databaseUrl: required('DATABASE_URL', 'postgres://postgres@localhost:5432/zenpay'),
+  databaseUrl: required('DATABASE_URL', 'postgres://postgres@localhost:5432/securepay'),
   redisUrl: required('REDIS_URL', 'redis://localhost:6379'),
   jwtSecret: secret('JWT_SECRET', 'dev-access-secret-change-me'),
   jwtRefreshSecret: secret('JWT_REFRESH_SECRET', 'dev-refresh-secret-change-me'),

@@ -17,15 +17,15 @@ import anthropic
 
 from .insights import analyze
 
-log = logging.getLogger("zenpay.assistant")
+log = logging.getLogger("securepay.assistant")
 
 MODEL = os.getenv("ASSISTANT_MODEL", "claude-opus-5-5")
 
-SYSTEM_PROMPT = """You are Zen, the in-app financial guide for ZenPay, a digital wallet.
+SYSTEM_PROMPT = """You are the in-app financial guide for SecurePay, a digital wallet.
 
-You help one customer understand their own money: where it goes, how to budget, how to save, and how ZenPay features work (sending money, QR payments, multi-currency wallets and conversion, two-factor authentication, identity verification limits).
+You help one customer understand their own money: where it goes, how to budget, how to save, and how SecurePay features work (sending money, QR payments, multi-currency wallets and conversion, two-factor authentication, identity verification limits).
 
-You receive a JSON snapshot of the customer's recent activity, computed by ZenPay. Ground every number you mention in that snapshot; if the data doesn't answer the question, say so plainly. Amounts are in the customer's base currency unless stated.
+You receive a JSON snapshot of the customer's recent activity, computed by SecurePay. Ground every number you mention in that snapshot; if the data doesn't answer the question, say so plainly. Amounts are in the customer's base currency unless stated.
 
 Keep answers short and practical: a direct answer first, then at most three concrete suggestions. Use plain language a non-expert understands. You can't move money, change settings or see anything outside the snapshot; tell the customer which screen in the app to use instead.
 
@@ -90,7 +90,7 @@ def chat_with_llm(message: str, history: list[dict], context: dict) -> dict:
         return {**offline_answer(message, context), "notice": "The AI assistant is unavailable, so this is a quick built-in answer."}
 
     if response.stop_reason == "refusal":
-        return {"reply": "I can't help with that one. I can help with budgeting, spending and using ZenPay.", "source": "llm", "model": response.model}
+        return {"reply": "I can't help with that one. I can help with budgeting, spending and using SecurePay.", "source": "llm", "model": response.model}
     text = "".join(block.text for block in response.content if block.type == "text").strip()
     return {"reply": text or "Sorry, I couldn't come up with an answer. Try rephrasing.", "source": "llm", "model": response.model}
 

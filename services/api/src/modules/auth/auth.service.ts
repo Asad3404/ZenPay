@@ -189,7 +189,7 @@ export class AuthService {
       { status: 'pending', pollSecretHash: sha256(pollSecret) },
       config.qrLoginTtlSeconds,
     );
-    const qrPayload = `zenpay://login?sid=${sessionId}`;
+    const qrPayload = `securepay://login?sid=${sessionId}`;
     return {
       sessionId,
       pollSecret,

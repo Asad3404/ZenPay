@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
 
-/// Base URL of the ZenPay API. Override at build time:
+/// Base URL of the SecurePay API. Override at build time:
 ///   flutter run --dart-define=API_URL=http://10.0.2.2:4000/api/v1   (Android emulator)
 const apiUrl = String.fromEnvironment('API_URL', defaultValue: 'http://localhost:4000/api/v1');
 
@@ -106,7 +106,7 @@ class Api {
       res = await send();
       if (res.statusCode == 401 && auth && await _refresh()) res = await send();
     } catch (_) {
-      throw ApiException(0, 'Cannot reach ZenPay. Check your connection.', code: 'NETWORK');
+      throw ApiException(0, 'Cannot reach SecurePay. Check your connection.', code: 'NETWORK');
     }
     final decoded = res.body.isEmpty ? null : jsonDecode(res.body);
     if (res.statusCode >= 400) {

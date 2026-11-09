@@ -11,8 +11,8 @@ function AuthCard({ children }: { children: React.ReactNode }) {
     <div className="grid min-h-screen place-items-center px-4 py-10">
       <div className="w-full max-w-md">
         <div className="mb-6 flex items-center justify-center gap-2 text-xl font-bold">
-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-brand-ink">Z</span>
-          ZenPay
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-brand text-brand-ink">S</span>
+          SecurePay
         </div>
         <div className="card p-6 sm:p-8">{children}</div>
       </div>
@@ -56,12 +56,12 @@ function QrLogin({ onDone }: { onDone: (t: TokenResponse) => void }) {
   return (
     <div className="space-y-4 text-center">
       <div className="mx-auto grid aspect-square w-56 place-items-center rounded-2xl border border-line bg-white p-3">
-        {session && status === 'pending' ? <img src={session.qrCodeDataUrl} alt="QR code to sign in with the ZenPay app" className="h-full w-full" /> : <Spinner className="text-sub" />}
+        {session && status === 'pending' ? <img src={session.qrCodeDataUrl} alt="QR code to sign in with the SecurePay app" className="h-full w-full" /> : <Spinner className="text-sub" />}
       </div>
       {status === 'expired' && <Alert kind="warn">This code expired. Reload the page for a new one.</Alert>}
       {status === 'error' && <Alert>Could not start QR sign-in.</Alert>}
       <ol className="space-y-1 text-left text-sm text-sub">
-        <li>1. Open ZenPay on your phone</li>
+        <li>1. Open SecurePay on your phone</li>
         <li>2. Go to Security → Scan to sign in</li>
         <li>3. Point your camera at this code and approve</li>
       </ol>
@@ -152,7 +152,7 @@ function LoginForm() {
         )}
       </div>
       <p className="mt-6 text-center text-sm text-sub">
-        New to ZenPay? <Link href="/register" className="font-semibold text-brand">Create an account</Link>
+        New to SecurePay? <Link href="/register" className="font-semibold text-brand">Create an account</Link>
       </p>
     </AuthCard>
   );

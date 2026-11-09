@@ -94,7 +94,7 @@ class _SecurityScreenState extends State<SecurityScreen> {
         child: ListTile(
           leading: const Icon(Icons.qr_code_scanner),
           title: const Text('Scan to sign in on the web'),
-          subtitle: const Text('Open the ZenPay website, choose “Scan QR code”, then scan it here.'),
+          subtitle: const Text('Open the SecurePay website, choose “Scan QR code”, then scan it here.'),
           onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const ScanScreen())),
         ),
       ),

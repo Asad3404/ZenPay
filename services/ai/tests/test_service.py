@@ -57,8 +57,8 @@ def test_categorize():
     assert categorize("Rent share", "transfer") == "Bills & Utilities"
     assert categorize("for you", "transfer") == "Transfers"
     assert categorize("zzz") == "Other"
-    assert categorize("Groceries", "qr_payment", "Zen Cafe") == "Groceries"
-    assert categorize("ORDER-42", "qr_payment", "Zen Cafe") == "Food & Dining"
+    assert categorize("Groceries", "qr_payment", "Corner Cafe") == "Groceries"
+    assert categorize("ORDER-42", "qr_payment", "Corner Cafe") == "Food & Dining"
 
 
 def test_forecast_follows_trend():
@@ -75,7 +75,7 @@ def _ctx(now):
         "balance": 1234.5,
         "transactions": [
             {"date": d(1), "kind": "qr_payment", "direction": "out", "amount": 120, "description": "Groceries", "counterparty": "Mart"},
-            {"date": d(2), "kind": "qr_payment", "direction": "out", "amount": 30, "description": "Coffee", "counterparty": "Zen Cafe"},
+            {"date": d(2), "kind": "qr_payment", "direction": "out", "amount": 30, "description": "Coffee", "counterparty": "Corner Cafe"},
             {"date": d(3), "kind": "deposit", "direction": "in", "amount": 500, "description": "Top-up", "counterparty": "Card top-up"},
             {"date": d(40), "kind": "qr_payment", "direction": "out", "amount": 60, "description": "Groceries", "counterparty": "Mart"},
         ],

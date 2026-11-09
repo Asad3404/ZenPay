@@ -1,4 +1,4 @@
--- ZenPay core schema.
+-- SecurePay core schema.
 -- Money is always stored as BIGINT in the currency's minor unit (cents, paisa...).
 -- The ledger is double-entry: every journal entry has postings that sum to zero per currency.
 

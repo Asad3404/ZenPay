@@ -1,5 +1,5 @@
-name: zenpay_mobile
-description: ZenPay mobile wallet (Android and iOS).
+name: securepay_mobile
+description: SecurePay mobile wallet (Android and iOS).
 publish_to: "none"
 version: 1.0.0+1
 

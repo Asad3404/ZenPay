@@ -1,4 +1,4 @@
-# ZenPay
+# SecurePay
 
 An AI-powered digital wallet with QR and MFA authentication, multi-currency wallets, QR payments, AI financial guidance and fraud detection.
 
@@ -160,7 +160,7 @@ To enable the language-model assistant, create a `.env` file next to `docker-com
 You need Node 22, Python 3.12+, PostgreSQL 16 and Redis 7.
 
 ```bash
-createdb zenpay
+createdb securepay
 ```
 
 ```bash
@@ -181,10 +181,10 @@ The API loads `services/api/.env` on start. Edit `DATABASE_URL` there to match y
 
 | Email | Password | Notes |
 |---|---|---|
-| `alice@zenpay.dev` | `Password123` | Customer with 3 months of history |
-| `bob@zenpay.dev` | `Password123` | Customer |
-| `cafe@zenpay.dev` | `Password123` | Merchant |
-| `admin@zenpay.dev` | `Admin12345` | Admin console at `/admin` |
+| `alice@securepay.dev` | `Password123` | Customer with 3 months of history |
+| `bob@securepay.dev` | `Password123` | Customer |
+| `cafe@securepay.dev` | `Password123` | Merchant |
+| `admin@securepay.dev` | `Admin12345` | Admin console at `/admin` |
 
 Sandbox tip: a top-up whose cents end in `.13` (for example `5.13`) is declined, so you can test the failure path.
 
@@ -208,7 +208,7 @@ flutter run --dart-define=API_URL=http://10.0.2.2:4000/api/v1
 cd services/api && npm test
 ```
 
-Runs 24 unit and end-to-end tests against a real Postgres and Redis (`TEST_DATABASE_URL`, default `postgres://postgres@localhost:5432/zenpay_test`, which is wiped). They cover auth, MFA, QR login, idempotency, concurrent transfers keeping the ledger balanced, FX, KYC limits, QR payments, fraud holds and admin review.
+Runs 24 unit and end-to-end tests against a real Postgres and Redis (`TEST_DATABASE_URL`, default `postgres://postgres@localhost:5432/securepay_test`, which is wiped). They cover auth, MFA, QR login, idempotency, concurrent transfers keeping the ledger balanced, FX, KYC limits, QR payments, fraud holds and admin review.
 
 ```bash
 cd services/ai && .venv/bin/python -m pytest -q

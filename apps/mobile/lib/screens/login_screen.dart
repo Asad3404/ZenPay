@@ -75,10 +75,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 40,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(color: scheme.primary, borderRadius: BorderRadius.circular(10)),
-                      child: Text('Z', style: TextStyle(color: scheme.onPrimary, fontWeight: FontWeight.bold, fontSize: 20)),
+                      child: Text('S', style: TextStyle(color: scheme.onPrimary, fontWeight: FontWeight.bold, fontSize: 20)),
                     ),
                     const SizedBox(width: 10),
-                    const Text('ZenPay', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                    const Text('SecurePay', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   ]),
                   const SizedBox(height: 32),
                   Text(
@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (_mfaToken == null)
                     TextButton(
                       onPressed: () => setState(() => _register = !_register),
-                      child: Text(_register ? 'Already have an account? Sign in' : 'New to ZenPay? Create an account'),
+                      child: Text(_register ? 'Already have an account? Sign in' : 'New to SecurePay? Create an account'),
                     )
                   else
                     TextButton(onPressed: () => setState(() => _mfaToken = null), child: const Text('Back')),

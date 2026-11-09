@@ -42,7 +42,7 @@ export class TransfersService {
       `SELECT id, full_name, email, status FROM users WHERE (email = $1 OR phone = $2) AND id <> $3`,
       [q, query.trim(), requesterId],
     );
-    if (!user || user.status !== 'active') throw new NotFoundException('No ZenPay user found');
+    if (!user || user.status !== 'active') throw new NotFoundException('No SecurePay user found');
     const [name, domain] = user.email.split('@');
     return { id: user.id, fullName: user.full_name, maskedEmail: `${name.slice(0, 2)}***@${domain}` };
   }
@@ -215,7 +215,7 @@ export class TransfersService {
         kind: 'hold_reversal',
         parentId: entryId,
         description: `Refund: ${entry.description}`,
-        metadata: { ...entry.metadata, reversedBy: adminId, counterpartyName: 'ZenPay Security' },
+        metadata: { ...entry.metadata, reversedBy: adminId, counterpartyName: 'SecurePay Security' },
         postings: [
           { accountId: holds.id, amount: -Number(amount), currency },
           { accountId: back.id, amount: Number(amount), currency },

@@ -6,11 +6,11 @@ import 'screens/login_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ZenPayApp());
+  runApp(const SecurePayApp());
 }
 
-class ZenPayApp extends StatelessWidget {
-  const ZenPayApp({super.key});
+class SecurePayApp extends StatelessWidget {
+  const SecurePayApp({super.key});
 
   static const brand = Color(0xFF0F766E);
 
@@ -22,7 +22,7 @@ class ZenPayApp extends StatelessWidget {
           inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder()),
         );
     return MaterialApp(
-      title: 'ZenPay',
+      title: 'SecurePay',
       debugShowCheckedModeBanner: false,
       theme: theme(Brightness.light),
       darkTheme: theme(Brightness.dark),

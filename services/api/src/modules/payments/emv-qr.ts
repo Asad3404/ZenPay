@@ -1,12 +1,12 @@
 /**
  * EMVCo Merchant-Presented QR (MPM) encoder/decoder.
  * Format: repeated TLV fields, each "ID(2) LEN(2) VALUE", ending with CRC "63 04 XXXX".
- * ZenPay's own data lives in merchant account template 26 under GUID "com.zenpay".
+ * SecurePay's own data lives in merchant account template 26 under GUID "com.securepay".
  * The CRC detects corruption, not tampering: the server always re-checks amount and
  * currency against the stored payment request before taking money.
  */
 
-const ZENPAY_GUID = 'com.zenpay';
+const SECUREPAY_GUID = 'com.securepay';
 
 export function crc16(data: string): string {
   let crc = 0xffff;
@@ -40,7 +40,7 @@ export function parseTlv(data: string): Record<string, string> {
   return out;
 }
 
-export interface ZenPayQr {
+export interface SecurePayQr {
   requestId: string;
   merchantId: string;
   merchantName: string;
@@ -51,8 +51,8 @@ export interface ZenPayQr {
   reference?: string;
 }
 
-export function encodeQr(q: ZenPayQr): string {
-  const merchantInfo = tlv('00', ZENPAY_GUID) + tlv('01', q.merchantId) + tlv('02', q.requestId);
+export function encodeQr(q: SecurePayQr): string {
+  const merchantInfo = tlv('00', SECUREPAY_GUID) + tlv('01', q.merchantId) + tlv('02', q.requestId);
   let body =
     tlv('00', '01') + // payload format indicator
     tlv('01', q.amount ? '12' : '11') + // 12 = dynamic (single use), 11 = static
@@ -68,7 +68,7 @@ export function encodeQr(q: ZenPayQr): string {
   return body + crc16(body);
 }
 
-export function decodeQr(payload: string): ZenPayQr {
+export function decodeQr(payload: string): SecurePayQr {
   const data = (payload ?? '').trim();
   if (data.length < 20 || !data.slice(-8).startsWith('6304')) throw new Error('Not an EMV QR payload');
   const expected = crc16(data.slice(0, -4));
@@ -76,7 +76,7 @@ export function decodeQr(payload: string): ZenPayQr {
   const fields = parseTlv(data.slice(0, -8));
   if (fields['00'] !== '01') throw new Error('Unsupported QR format');
   const merchant = parseTlv(fields['26'] ?? '');
-  if (merchant['00'] !== ZENPAY_GUID) throw new Error('This QR code is not a ZenPay payment code');
+  if (merchant['00'] !== SECUREPAY_GUID) throw new Error('This QR code is not a SecurePay payment code');
   const additional = fields['62'] ? parseTlv(fields['62']) : {};
   return {
     merchantId: merchant['01'],

@@ -1,4 +1,4 @@
-"""ZenPay AI service: fraud scoring, spending insights and the financial assistant.
+"""SecurePay AI service: fraud scoring, spending insights and the financial assistant.
 
 Internal service: it is called only by the core API and should not be exposed to the internet.
 """
@@ -28,7 +28,7 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title="ZenPay AI Service", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="SecurePay AI Service", version="1.0.0", lifespan=lifespan)
 
 
 class FraudFeatures(BaseModel):

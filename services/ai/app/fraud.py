@@ -4,7 +4,7 @@ Two models are combined:
   * HistGradientBoostingClassifier - supervised, learns known fraud patterns.
   * IsolationForest - unsupervised, trained on legitimate traffic only, flags unusual behaviour.
 
-There is no public labelled dataset with ZenPay's exact features, so the model is bootstrapped on a
+There is no public labelled dataset with SecurePay's exact features, so the model is bootstrapped on a
 synthetic dataset that encodes well-known fraud typologies (account takeover, mule accounts, velocity
 attacks). Retrain on real labelled outcomes from the admin review queue once you have them:
     python -m scripts.train_fraud_model --data your_labelled.csv
@@ -22,7 +22,7 @@ from sklearn.ensemble import HistGradientBoostingClassifier, IsolationForest
 from sklearn.metrics import average_precision_score, roc_auc_score
 from sklearn.model_selection import train_test_split
 
-log = logging.getLogger("zenpay.fraud")
+log = logging.getLogger("securepay.fraud")
 
 FEATURES = [
     "amount_usd",

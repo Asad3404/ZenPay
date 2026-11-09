@@ -18,7 +18,7 @@ export function configureApp(app: INestApplication) {
     next();
   });
   const doc = new DocumentBuilder()
-    .setTitle('ZenPay API')
+    .setTitle('SecurePay API')
     .setDescription('Digital wallet API: auth + MFA, multi-currency wallets, transfers, QR payments, fraud review, AI insights')
     .setVersion('1.0')
     .addBearerAuth()
