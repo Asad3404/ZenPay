@@ -2,6 +2,8 @@
 
 An AI-powered digital wallet with QR and MFA authentication, multi-currency wallets, QR payments, AI financial guidance and fraud detection.
 
+**▶ [Watch the 3-minute demo video](docs/demo/SecurePay-demo.mp4)**: sign-in with MFA, sending money, currency conversion, QR payments, AI insights, a fraud hold and the admin review, recorded from the running app.
+
 ```
 apps/
   web/       Next.js 15 web app: customer wallet + admin console
